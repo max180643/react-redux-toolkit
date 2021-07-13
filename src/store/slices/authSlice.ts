@@ -1,8 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 import { signin } from '../../data/users'
+import { User } from '../../types'
 
-const initialState = {
+type AuthState = {
+  user: User | null
+  loading: boolean
+  error: string
+}
+
+const initialState: AuthState = {
   user: null,
   loading: false,
   error: '',
@@ -10,7 +17,7 @@ const initialState = {
 
 export const signinAsync = createAsyncThunk(
   'signin',
-  async ({ email, password }, store) => {
+  async ({ email, password }: {email: string, password: string}, store) => {
     // paremeter store ใช้สำหรับ store.dispatch
     try {
       const user = await signin(email, password)
@@ -30,28 +37,44 @@ const authSlice = createSlice({
   name: 'auth',
   initialState: initialState,
   reducers: {
-    signout: (state, action) => {
+    signout: (state) => {
       state.user = null
       state.loading = false
       state.error = ''
     },
   },
-  extraReducers: {
-    [signinAsync.pending]: (state, action) => {
+  // extraReducers: {
+  //   [signinAsync.pending]: (state, action) => {
+  //     state.loading = true
+  //     state.error = ''
+  //   },
+  //   [signinAsync.fulfilled]: (state, action) => {
+  //     state.user = action.payload
+  //     state.loading = false
+  //     state.error = ''
+  //   },
+  //   [signinAsync.rejected]: (state, action) => {
+  //     state.user = null
+  //     state.loading = false
+  //     state.error = action.error.message
+  //   },
+  // },
+  extraReducers: (builder) => {
+    builder.addCase(signinAsync.pending, (state) => {
       state.loading = true
       state.error = ''
-    },
-    [signinAsync.fulfilled]: (state, action) => {
+    })
+    builder.addCase(signinAsync.fulfilled, (state, action) => {
       state.user = action.payload
       state.loading = false
       state.error = ''
-    },
-    [signinAsync.rejected]: (state, action) => {
+    })
+    builder.addCase(signinAsync.rejected, (state, action) => {
       state.user = null
       state.loading = false
-      state.error = action.error.message
-    },
-  },
+      state.error = action.error.message || ''
+    })
+  }
 })
 
 // Action creators (auto ไม่ต้องเขียนเอง)

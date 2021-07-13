@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useAppDispatch, useAppSelector } from '../store/store'
 
 import { signinAsync } from '../store/slices/authSlice'
 
@@ -7,8 +7,8 @@ export default function Signin() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const dispatch = useDispatch()
-  const { loading, error } = useSelector((state) => state.auth)
+  const dispatch = useAppDispatch()
+  const { loading, error } = useAppSelector((state) => state.auth)
 
   return (
     <div className="form">

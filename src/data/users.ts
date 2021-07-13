@@ -1,4 +1,6 @@
-export const users = [
+import { User } from "../types"
+
+export const users: User[] = [
     {
         id: 'a',
         username: 'Somsak',
@@ -13,7 +15,7 @@ export const users = [
     },
 ]
 
-export function signin(email, password) {
+export function signin(email: string, password: string): Promise<User> {
     return new Promise((resolve, reject) => {
         const foundUser = users.find(
             (user) => user.email === email && user.password === password

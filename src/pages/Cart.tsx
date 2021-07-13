@@ -1,11 +1,11 @@
 import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useAppSelector, useAppDispatch } from '../store/store'
 
 import { deleteCart } from '../store/slices/cartSlice'
 
 export default function Cart() {
-  const cart = useSelector(state => state.cart)
-  const dispatch = useDispatch()
+  const cart = useAppSelector(state => state.cart)
+  const dispatch = useAppDispatch()
 
   return <div className='cart'>
     <div className='cart-body'>
