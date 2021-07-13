@@ -1,4 +1,6 @@
-import { Switch, Route } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Switch, Route, useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 import Nav from './components/Nav'
 import Products from './pages/Products'
@@ -7,21 +9,46 @@ import Cart from './pages/Cart'
 
 import './App.css'
 
-function App() {
+function UnAuthApp() {
   return (
-    <div className='App'>
+    <Switch>
+      <Route path="/signin">
+        <Signin />
+      </Route>
+      <Route path="/">
+        <Products />
+      </Route>
+    </Switch>
+  )
+}
+
+function AuthApp() {
+  return (
+    <Switch>
+      <Route path="/cart">
+        <Cart />
+      </Route>
+      <Route path="/">
+        <Products />
+      </Route>
+    </Switch>
+  )
+}
+
+function App() {
+  const { user } = useSelector((state) => state.auth)
+
+  const history = useHistory()
+
+  useEffect(() => {
+    if (!user) history.push('/signin')
+    else history.push('/')
+  }, [user])
+
+  return (
+    <div className="App">
       <Nav />
-      <Switch>
-        <Route path='/signin'>
-          <Signin />
-        </Route>
-        <Route path='/cart'>
-          <Cart />
-        </Route>
-        <Route path='/'>
-          <Products />
-        </Route>
-      </Switch>
+      {!user ? <UnAuthApp /> : <AuthApp />}
     </div>
   )
 }
