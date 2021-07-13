@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Switch, Route, useHistory } from 'react-router-dom'
+import { Switch, Route, useHistory, useLocation } from 'react-router-dom'
 import { useAppSelector } from './store/store'
 
 import Nav from './components/Nav'
@@ -39,11 +39,13 @@ function App() {
   const { user } = useAppSelector((state) => state.auth)
 
   const history = useHistory()
+  const location = useLocation()
 
   useEffect(() => {
     if (!user) history.push('/signin')
+    if (!user && location.pathname === '/cart') history.push('/signin')
     else history.push('/')
-  }, [user])
+  }, [user, history])
 
   return (
     <div className="App">
